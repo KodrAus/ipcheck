@@ -1,0 +1,17 @@
+[package]
+name = "ipcheck"
+version = "0.0.0"
+authors = ["Ashley Mannix <kodraus@hey.com>"]
+publish = false
+edition = "2018"
+build = "build.rs"
+
+[[bin]]
+name = "ipcheck"
+path = "main.rs"
+
+[dependencies.serde]
+version = "1"
+
+[dependencies.serde_json]
+version = "1"

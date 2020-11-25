@@ -1,0 +1,13 @@
+[package]
+name = "ip-rust"
+version = "0.0.0"
+authors = ["Ashley Mannix <kodraus@hey.com>"]
+publish = false
+edition = "2018"
+
+[[bin]]
+name = "ip-rust"
+path = "main.rs"
+
+[dependencies.serde_json]
+version = "1"
