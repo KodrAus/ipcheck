@@ -5,7 +5,6 @@ use std::{
     },
     fs,
     process::Command,
-    net::IpAddr,
 };
 
 use serde_json::{json, Value};
@@ -35,13 +34,13 @@ fn main() {
 }
 
 fn rust(addr: &str) -> Value {
-    let r = generic(addr, "../impls/ip-rust/target/debug/ip-rust");
+    let r = generic(addr, "../artifacts/rust/ip-rust");
 
     serde_json::from_str(&r).expect("failed to parse output")
 }
 
 fn dotnet(addr: &str) -> Value {
-    let r = generic(addr, "../impls/IPNet/bin/Debug/net5.0/IPNet");
+    let r = generic(addr, "../artifacts/dotnet/IPNet");
 
     serde_json::from_str(&r).expect("failed to parse output")
 }
