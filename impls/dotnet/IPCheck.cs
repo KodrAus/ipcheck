@@ -10,8 +10,8 @@ class IPCheck
         var addr = IPAddress.Parse(input);
 
         var data = new {
-            asV4 = addr.MapToIPv4().ToString(),
-            asV6 = addr.MapToIPv6().ToString(),
+            to_ipv4 = addr.MapToIPv4().ToString(),
+            to_ipv6 = addr.MapToIPv6().ToString(),
         };
 
         Console.WriteLine("{0}", JsonSerializer.Serialize(data));
