@@ -1,5 +1,5 @@
 [package]
-name = "ipcheck"
+name = "ipcheck-host"
 version = "0.0.0"
 authors = ["Ashley Mannix <kodraus@hey.com>", "Christiaan Dirkx <christiaan@dirkx.email>"]
 publish = false
@@ -7,7 +7,7 @@ edition = "2018"
 build = "build/build.rs"
 
 [[bin]]
-name = "ipcheck"
+name = "ipcheck-host"
 path = "main.rs"
 
 [dependencies.serde]

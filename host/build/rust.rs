@@ -6,7 +6,7 @@ pub fn build() -> std::io::Result<()> {
             "-Z", "unstable-options",
             "--out-dir", "../../artifacts/rust",
         ])
-        .current_dir("../impls/ip-rust")
+        .current_dir("../impls/rust")
         .output()?;
 
     if output.status.success() {

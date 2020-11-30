@@ -34,13 +34,13 @@ fn main() {
 }
 
 fn rust(addr: &str) -> Value {
-    let r = generic(addr, "../artifacts/rust/ip-rust");
+    let r = generic(addr, "../artifacts/rust/ipcheck");
 
     serde_json::from_str(&r).expect("failed to parse output")
 }
 
 fn dotnet(addr: &str) -> Value {
-    let r = generic(addr, "../artifacts/dotnet/IPNet");
+    let r = generic(addr, "../artifacts/dotnet/IPCheck");
 
     serde_json::from_str(&r).expect("failed to parse output")
 }

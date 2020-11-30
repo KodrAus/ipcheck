@@ -17,7 +17,7 @@ pub fn build() -> std::io::Result<()> {
             "--self-contained", "true",
             "-o", "../../artifacts/dotnet",
         ])
-        .current_dir("../impls/IPNet")
+        .current_dir("../impls/dotnet")
         .output()?;
 
     if output.status.success() {
