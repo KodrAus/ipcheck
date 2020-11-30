@@ -1,7 +1,7 @@
 [package]
 name = "ipcheck"
 version = "0.0.0"
-authors = ["Ashley Mannix <kodraus@hey.com>"]
+authors = ["Ashley Mannix <kodraus@hey.com>", "Christiaan Dirkx <christiaan@dirkx.email>"]
 publish = false
 edition = "2018"
 build = "build.rs"
