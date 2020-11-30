@@ -1,4 +1,4 @@
-pub fn build() -> std::io::Result<()> {
+pub fn build() -> std::io::Result<&'static str> {
     if !std::path::Path::new("../artifacts/rust").exists() {
         std::fs::create_dir("../artifacts/rust").expect("failed to create Rust artifacts dir");
     }
@@ -17,7 +17,7 @@ pub fn build() -> std::io::Result<()> {
         .output()?;
 
     if output.status.success() {
-        Ok(())
+        Ok("../artifacts/rust/ipcheck")
     } else {
         Err(std::io::Error::new(std::io::ErrorKind::Other, format!("{:?}", String::from_utf8_lossy(&output.stderr))))
     }

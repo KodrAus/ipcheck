@@ -15,11 +15,11 @@ fn main() {
     rerun_if_changed("../impls");
 }
 
-fn output_impl(file: &mut std::fs::File, lang: &str, result: std::io::Result<()>) {
+fn output_impl(file: &mut std::fs::File, lang: &str, result: std::io::Result<&'static str>) {
     use std::io::Write;
 
     match result {
-        Ok(()) => { writeln!(file, "{}", lang).expect("failed to write .impls file") }
+        Ok(artifact) => { writeln!(file, "{}: {}", lang, artifact).expect("failed to write .impls file") }
         Err(err) => {
             println!("cargo:warning=Failed to build {} impl: {}", lang, err)
         }
