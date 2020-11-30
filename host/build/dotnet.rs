@@ -1,4 +1,11 @@
 pub fn build() -> std::io::Result<()> {
+    if !std::path::Path::new("../artifacts/dotnet").exists() {
+        std::fs::create_dir("../artifacts/dotnet").expect("failed to create .NET artifacts dir");
+    }
+
+    std::fs::copy("../impls/dotnet/IPCheck.cs", "../artifacts/dotnet/IPCheck.cs")?;
+    std::fs::copy("../impls/dotnet/IPCheck.csproj", "../artifacts/dotnet/IPCheck.csproj")?;
+
     let output = std::process::Command::new("dotnet")
         .args(&[
             "publish",
@@ -15,9 +22,9 @@ pub fn build() -> std::io::Result<()> {
                 }
             }},
             "--self-contained", "true",
-            "-o", "../../artifacts/dotnet",
+            "-o", ".",
         ])
-        .current_dir("../impls/dotnet")
+        .current_dir("../artifacts/dotnet")
         .output()?;
 
     if output.status.success() {
