@@ -4,7 +4,7 @@ version = "0.0.0"
 authors = ["Ashley Mannix <kodraus@hey.com>", "Christiaan Dirkx <christiaan@dirkx.email>"]
 publish = false
 edition = "2018"
-build = "build.rs"
+build = "build/build.rs"
 
 [[bin]]
 name = "ipcheck"
