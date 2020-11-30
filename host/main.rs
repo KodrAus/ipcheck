@@ -1,41 +1,16 @@
-use std::io::{Cursor, BufRead};
+use std::io::BufRead;
 use serde_json::{Value, Map};
 
 fn main() {
-    let mut impls : Vec<(String, String)> = std::fs::read("../artifacts/.impls")
-        .expect("missing .impls file")
-        .lines()
-        .map(|line| line.expect("invalid .impls file"))
-        .map(|line| {
-            let mut line = line.split(": ");
-            let lang = line.next().expect("missing impl language id");
-            let artifact = line.next().expect("missing impl artifact path");
+    let (rust_artifact, impls) = &parse_impls();
+    let addrs = parse_addrs();
 
-            println!("Found {} implementation.", lang);
+    println!("Testing {} addresses:", addrs.len());
 
-            (lang.into(), artifact.into())
-        })
-        .collect();
-
-    if impls.is_empty() || impls.get(0).map_or(false, |(lang, _)| lang != "Rust") {
-        println!("No Rust implementation found.");
-        return;
-    }
-
-    let (_, rust) = &impls.remove(0);
-
-    if impls.is_empty() {
-        println!("No implementations to compare against found.");
-        return;
-    }
-
-    println!();
-
-    for line in Cursor::new(std::fs::read("input.txt").expect("missing input.txt file")).lines() {
-        let addr = &line.expect("invalid input");
+    for addr in &addrs {
         print!("{}", addr);
 
-        let rust = invoke_impl("Rust", rust, addr);
+        let rust = invoke_impl("Rust", rust_artifact, addr);
 
         let outputs = impls
             .iter()
@@ -56,10 +31,58 @@ fn main() {
     }
 }
 
+fn parse_impls() -> (String, Vec<(String, String)>) {
+    let mut impls : Vec<(String, String)> = std::fs::read("../artifacts/.impls")
+        .expect("missing impls file")
+        .lines()
+        .map(|line| line.expect("invalid impls file"))
+        .map(|line| {
+            let mut line = line.split(": ");
+            let lang = line.next().expect("missing impl language id");
+            let artifact = line.next().expect("missing impl artifact path");
+
+            println!("Found {} implementation.", lang);
+
+            (lang.into(), artifact.into())
+        })
+        .collect();
+
+    if impls.is_empty() || impls.get(0).map_or(false, |(lang, _)| lang != "Rust") {
+        println!("No Rust implementation found.");
+        std::process::exit(0);
+    }
+
+    let rust = impls.remove(0);
+
+    if impls.is_empty() {
+        println!("No implementations to compare against found.");
+        std::process::exit(0);
+    }
+
+    println!();
+
+    (rust.1, impls)
+}
+
+fn parse_addrs() -> Vec<String> {
+    let addrs : Vec<String> = std::fs::read("input.txt")
+        .expect("missing input file")
+        .lines()
+        .map(|line| line.expect("invalid input file").into())
+        .collect();
+
+    if addrs.is_empty() {
+        println!("No addresses found.");
+        std::process::exit(0);
+    }
+
+    addrs
+}
+
 fn invoke_impl(lang: &str, artifact: &str, addr: &str) -> Map<String, Value> {
     let output = std::process::Command::new(artifact).arg(addr).output().expect(&format!("failed to invoke {} artifact", lang));
 
-    if output.status.success() {
+    if output.stderr.is_empty() {
         let out = String::from_utf8(output.stdout).expect(&format!("failed to parse {} artifact output", lang));
         serde_json::from_str(&out).expect(&format!("failed to parse {} artifact output {:?}", lang, out))
     } else {
