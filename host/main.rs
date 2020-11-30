@@ -10,26 +10,53 @@ use std::{
 use serde_json::{json, Value};
 
 fn main() {
+    let mut impls : Vec<String> = std::fs::read("../artifacts/.impls")
+        .expect("missing .impls file")
+        .lines()
+        .map(|line| {
+            let lang = line.expect("invalid .impls file");
+            println!("Found {} implementation.", lang);
+            lang
+        })
+        .collect();
+
+    if impls.is_empty() || impls.remove(0) != "Rust" {
+        println!("No Rust implementation found.");
+        return;
+    }
+
+    if impls.is_empty() {
+        println!("No implementations to compare against found.");
+        return;
+    }
+
+    println!();
+
     for line in Cursor::new(fs::read("input.txt").expect("missing input.txt file")).lines() {
         let addr = line.expect("invalid input");
+        print!("{}", addr);
 
         let rust = rust(&addr);
-        let dotnet = dotnet(&addr);
 
-        let others = [("dotnet", &dotnet)];
-
-        let different = others
+        let outputs = impls
             .iter()
-            .filter(|(_, output)| **output != rust)
-            .map(|(key, _)| key)
+            .map(|lang| match lang.as_str() {
+                ".NET" => (lang, dotnet(&addr)),
+                _ => panic!("unrecognized lang")
+            });
+
+        let diffs = outputs.clone()
+            .filter(|(_, output)| output != &rust)
+            .map(|(lang, _)| lang)
             .collect::<Vec<_>>();
 
-        println!("{}", json!({
-            "input": addr,
-            "different": different,
-            "rust": rust,
-            "dotnet": dotnet
-        }));
+        print!(", different: {:?}", diffs);
+        print!(", Rust: {}", rust);
+        for (lang, output) in outputs {
+            print!(", {}: {}", lang, output);
+        }
+
+        println!();
     }
 }
 

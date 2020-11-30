@@ -6,16 +6,23 @@ fn main() {
         std::fs::create_dir("../artifacts").expect("failed to create artifacts dir");
     }
 
-    handle_err("Rust",rust::build());
-    handle_err(".NET", dotnet::build());
+    let mut impls = std::fs::File::create("../artifacts/.impls").expect("failed to create .impls file");
+
+    output_impl(&mut impls, "Rust", rust::build());
+    output_impl(&mut impls, ".NET", dotnet::build());
 
     rerun_if_changed("build");
     rerun_if_changed("../impls");
 }
 
-fn handle_err(lang: &str, result: std::io::Result<()>) {
-    if let Err(err) = result {
-        panic!("Failed to build {} impl: {}", lang, err)
+fn output_impl(file: &mut std::fs::File, lang: &str, result: std::io::Result<()>) {
+    use std::io::Write;
+
+    match result {
+        Ok(()) => { writeln!(file, "{}", lang).expect("failed to write .impls file") }
+        Err(err) => {
+            println!("cargo:warning=Failed to build {} impl: {}", lang, err)
+        }
     }
 }
 
