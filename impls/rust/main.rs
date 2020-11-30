@@ -8,8 +8,6 @@ fn main() {
     let addr: IpAddr = input.parse().expect("failed to parse IP");
 
     let data = json!({
-        "input": input,
-        "rendered": addr.to_string(),
         "asV4": match addr {
             IpAddr::V4(addr) => json!(addr.to_string()),
             IpAddr::V6(addr) => json!(addr.to_ipv4().map(|addr| addr.to_string())),

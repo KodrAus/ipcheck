@@ -10,8 +10,6 @@ class IPCheck
         var addr = IPAddress.Parse(input);
 
         var data = new {
-            input = input,
-            rendered = addr.ToString(),
             asV4 = addr.MapToIPv4().ToString(),
             asV6 = addr.MapToIPv6().ToString(),
         };
