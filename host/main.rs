@@ -10,21 +10,32 @@ fn main() {
     for addr in &addrs {
         print!("{}", addr);
 
-        let rust = invoke_impl("Rust", rust_artifact, addr);
+        let rust_output = invoke_impl("Rust", rust_artifact, addr);
 
-        let outputs = impls
-            .iter()
-            .map(|(lang, artifact)| (lang, invoke_impl(lang, artifact, addr)));
+        for (lang, artifact) in impls {
+            let output = invoke_impl(lang, artifact, addr);
 
-        let diffs = outputs.clone()
-            .filter(|(_, output)| output != &rust)
-            .map(|(lang, _)| lang)
-            .collect::<Vec<_>>();
+            use std::fmt::Write;
+            let mut buffer = String::new();
+            let mut diffs = 0;
 
-        print!(", different: {:?}", diffs);
-        print!(", Rust: {:?}", rust);
-        for (lang, output) in outputs {
-            print!(", {}: {:?}", lang, output);
+            for ((key, rust_value), (_, value)) in rust_output.iter().zip(output.iter()) {
+                if value != rust_value {
+                    if diffs > 0 {
+                        write!(buffer, ", ").unwrap();
+                    }
+
+                    write!(buffer, "{} : {} ≠ {}", key, rust_value, value).unwrap();
+
+                    diffs += 1;
+                }
+            }
+
+            if diffs == 0 {
+                print!(", {} ✔️", lang)
+            } else {
+                print!(", {} ❌ {{ {} }}", lang, buffer);
+            }
         }
 
         println!();
