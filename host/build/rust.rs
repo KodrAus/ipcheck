@@ -1,5 +1,5 @@
-pub fn build() {
-    let status = std::process::Command::new("cargo")
+pub fn build() -> std::io::Result<()> {
+    let output = std::process::Command::new("cargo")
         .args(&[
             "build",
             "--release",
@@ -7,9 +7,11 @@ pub fn build() {
             "--out-dir", "../../artifacts/rust",
         ])
         .current_dir("../impls/ip-rust")
-        .output()
-        .expect("failed to execute")
-        .status;
+        .output()?;
 
-    assert!(status.success(), "build command failed");
+    if output.status.success() {
+        Ok(())
+    } else {
+        Err(std::io::Error::new(std::io::ErrorKind::Other, format!("{:?}", String::from_utf8_lossy(&output.stderr))))
+    }
 }

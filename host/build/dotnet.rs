@@ -1,5 +1,5 @@
-pub fn build() {
-    let status = std::process::Command::new("dotnet")
+pub fn build() -> std::io::Result<()> {
+    let output = std::process::Command::new("dotnet")
         .args(&[
             "publish",
             "-c", "Release",
@@ -18,9 +18,11 @@ pub fn build() {
             "-o", "../../artifacts/dotnet",
         ])
         .current_dir("../impls/IPNet")
-        .output()
-        .expect("failed to execute")
-        .status;
+        .output()?;
 
-    assert!(status.success(), "build command failed");
+    if output.status.success() {
+        Ok(())
+    } else {
+        Err(std::io::Error::new(std::io::ErrorKind::Other, format!("{:?}", String::from_utf8_lossy(&output.stdout))))
+    }
 }
