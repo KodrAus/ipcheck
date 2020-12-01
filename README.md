@@ -7,3 +7,4 @@ The goal is to make sure the Rust programs are either the same or deliberately d
  - Rust
  - .NET
  - Python
+ - Go
