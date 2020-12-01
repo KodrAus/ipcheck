@@ -91,7 +91,13 @@ fn parse_addrs() -> Vec<String> {
 }
 
 fn invoke_impl(lang: &str, artifact: &str, addr: &str) -> Map<String, Value> {
-    let output = std::process::Command::new(artifact).arg(addr).output().expect(&format!("failed to invoke {} artifact", lang));
+    let mut artifact = artifact.split(" ");
+    let mut command = std::process::Command::new(artifact.next().expect(&format!("missing {} artifact", lang)));
+    for arg in artifact {
+        command.arg(arg);
+    }
+
+    let output = command.arg(addr).output().expect(&format!("failed to invoke {} artifact", lang));
 
     if output.stderr.is_empty() {
         let out = String::from_utf8(output.stdout).expect(&format!("failed to parse {} artifact output", lang));
