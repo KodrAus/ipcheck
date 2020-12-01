@@ -2,6 +2,7 @@ mod rust;
 mod dotnet;
 mod python;
 mod go;
+mod java;
 
 fn main() {
     if !std::path::Path::new("../artifacts").exists() {
@@ -14,6 +15,7 @@ fn main() {
     output_impl(&mut impls, ".NET", dotnet::build());
     output_impl(&mut impls, "Python", python::build());
     output_impl(&mut impls, "Go", go::build());
+    output_impl(&mut impls, "Java", java::build());
 
     rerun_if_changed("build");
     rerun_if_changed("../impls");
