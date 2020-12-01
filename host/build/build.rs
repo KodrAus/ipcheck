@@ -1,5 +1,6 @@
 mod rust;
 mod dotnet;
+mod python;
 
 fn main() {
     if !std::path::Path::new("../artifacts").exists() {
@@ -10,6 +11,7 @@ fn main() {
 
     output_impl(&mut impls, "Rust", rust::build());
     output_impl(&mut impls, ".NET", dotnet::build());
+    output_impl(&mut impls, "Python", python::build());
 
     rerun_if_changed("build");
     rerun_if_changed("../impls");
