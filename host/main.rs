@@ -20,7 +20,7 @@ fn main() {
             let mut diffs = 0;
 
             for ((key, rust_value), (_, value)) in rust_output.iter().zip(output.iter()) {
-                if value != rust_value {
+                if value != rust_value && value != "<unsupported>" {
                     if diffs > 0 {
                         write!(buffer, ", ").unwrap();
                     }
