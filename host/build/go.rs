@@ -11,9 +11,7 @@ pub fn build() -> std::io::Result<&'static str> {
             "ipcheck.go",
         ])
         .current_dir("../impls/go")
-        .stderr(std::process::Stdio::piped())
-        .spawn()?
-        .wait_with_output()?;
+        .output()?;
 
     if output.status.success() {
         Ok("../artifacts/go/ipcheck")

@@ -13,9 +13,7 @@ pub fn build() -> std::io::Result<&'static str> {
     let output = std::process::Command::new("mvn")
         .arg("package")
         .current_dir("../artifacts/java")
-        .stdout(std::process::Stdio::piped())
-        .spawn()?
-        .wait_with_output()?;
+        .output()?;
 
     if output.status.success() {
         Ok("java -jar ../artifacts/java/target/ipcheck-1.0-jar-with-dependencies.jar")
