@@ -12,6 +12,9 @@ class IPCheck
         var data = new {
             to_ipv4 = addr.MapToIPv4().ToString(),
             to_ipv6 = addr.MapToIPv6().ToString(),
+            is_unspecified = "<unsupported>",
+            is_loopback = IPAddress.IsLoopback(addr),
+            is_reserved = "<unsupported>",
         };
 
         Console.WriteLine("{0}", JsonSerializer.Serialize(data));
