@@ -10,7 +10,7 @@ pub fn build() -> std::io::Result<&'static str> {
     std::fs::copy("../impls/java/IpCheck.java", "../artifacts/java/src/main/java/IpCheck.java")?;
     std::fs::copy("../impls/java/pom.xml", "../artifacts/java/pom.xml")?;
 
-    let output = std::process::Command::new("mvn.cmd")
+    let output = std::process::Command::new("mvn")
         .arg("package")
         .current_dir("../artifacts/java")
         .stdout(std::process::Stdio::piped())
