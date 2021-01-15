@@ -18,4 +18,3 @@ These live under the `impls` directory.
 ## Running
 
 If you happen to have all of those other languages available on your machine you can `cargo run --manifest-path host/Cargo.toml`.
-Otherwise, there's a `Dockerfile` that you can build and run instead.
