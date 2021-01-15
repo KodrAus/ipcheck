@@ -1,5 +1,5 @@
 use serde_json::{Map, Value};
-use std::{collections::HashSet, fmt::Write, io::BufRead, net::IpAddr};
+use std::{collections::BTreeSet, fmt::Write, io::BufRead, net::IpAddr};
 
 const REF_LANG: &'static str = "Rust (New)";
 
@@ -31,7 +31,7 @@ fn main() {
     println!("{}", separator_buffer);
 
     // Operations that have no support in non-reference implementations
-    let mut no_lang_support = HashSet::new();
+    let mut no_lang_support = BTreeSet::new();
 
     for addr in &addrs {
         print!("| `{}` |", addr);
