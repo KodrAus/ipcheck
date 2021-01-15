@@ -1,15 +1,16 @@
-mod rust;
 mod dotnet;
-mod python;
 mod go;
 mod java;
+mod python;
+mod rust;
 
 fn main() {
     if !std::path::Path::new("../artifacts").exists() {
         std::fs::create_dir("../artifacts").expect("failed to create artifacts dir");
     }
 
-    let mut impls = std::fs::File::create("../artifacts/.impls").expect("failed to create .impls file");
+    let mut impls =
+        std::fs::File::create("../artifacts/.impls").expect("failed to create .impls file");
 
     output_impl(&mut impls, "Rust", rust::build());
     output_impl(&mut impls, ".NET", dotnet::build());
@@ -24,8 +25,12 @@ fn main() {
 fn output_impl(file: &mut std::fs::File, lang: &str, result: std::io::Result<&'static str>) {
     use std::io::Write;
 
+    println!("Building {}", lang);
+
     match result {
-        Ok(artifact) => { writeln!(file, "{}: {}", lang, artifact).expect("failed to write .impls file") }
+        Ok(artifact) => {
+            writeln!(file, "{}: {}", lang, artifact).expect("failed to write .impls file")
+        }
         Err(err) => {
             println!("cargo:warning=Failed to build {} impl: {}", lang, err)
         }

@@ -10,8 +10,10 @@ pub fn build() -> std::io::Result<&'static str> {
         .args(&[
             "build",
             "--release",
-            "-Z", "unstable-options",
-            "--out-dir", ".",
+            "-Z",
+            "unstable-options",
+            "--out-dir",
+            ".",
         ])
         .current_dir("../artifacts/rust")
         .output()?;
@@ -19,6 +21,9 @@ pub fn build() -> std::io::Result<&'static str> {
     if output.status.success() {
         Ok("../artifacts/rust/ipcheck")
     } else {
-        Err(std::io::Error::new(std::io::ErrorKind::Other, format!("{:?}", String::from_utf8_lossy(&output.stderr))))
+        Err(std::io::Error::new(
+            std::io::ErrorKind::Other,
+            format!("{:?}", String::from_utf8_lossy(&output.stderr)),
+        ))
     }
 }
