@@ -9,12 +9,15 @@ The goal is to make sure the Rust programs are either the same or deliberately d
 
 These live under the `impls` directory.
 
- - Rust (`impls/rust`)
- - .NET (`impls/dotnet`)
- - Python (`impls/python`)
- - Go (`impls/go`)
- - Java (`impls/java`)
+- Rust (New) (`impls/rust`) with the behavior proposed in `#76098`
+- Rust (Current) (`impls/rust_current`) with the current behavior on `nightly`
+- .NET (`impls/dotnet`)
+- Python (`impls/python`)
+- Go (`impls/go`)
+- Java (`impls/java`)
 
 ## Running
 
-If you happen to have all of those other languages available on your machine you can `cargo run --manifest-path host/Cargo.toml`.
+With the comparison languages available, you can run `cd host && cargo run` to compare them.
+
+Each implementation is invoked by the `host` app, using the addresses parsed from the `host/input.txt` file.

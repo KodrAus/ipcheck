@@ -1,5 +1,5 @@
 use serde_json::{Map, Value};
-use std::{collections::HashSet, fmt::Write, io::BufRead};
+use std::{collections::HashSet, fmt::Write, io::BufRead, net::IpAddr};
 
 const REF_LANG: &'static str = "Rust (New)";
 
@@ -58,7 +58,23 @@ fn main() {
                     no_lang_support.remove(ref_key);
                 }
 
-                if value != ref_value && !is_unsupported(value) && !is_unsupported(ref_value) {
+                let values_match = {
+                    let parsed_ref_value: Option<IpAddr> =
+                        ref_value.as_str().and_then(|addr| addr.parse().ok());
+                    let parsed_value: Option<IpAddr> =
+                        value.as_str().and_then(|addr| addr.parse().ok());
+
+                    match (parsed_ref_value, parsed_value) {
+                        // If we can parse the addresses then check them
+                        // This avoids some false negatives on formatting differences
+                        (Some(ref_value), Some(parsed_value)) => ref_value == parsed_value,
+                        _ => ref_value == value,
+                    }
+                };
+
+                // If the values don't match, and they're not simply unsupported
+                // then append the offending operation to the diff
+                if !values_match && !is_unsupported(value) && !is_unsupported(ref_value) {
                     if diffs > 0 {
                         write!(buffer, ", ").unwrap();
                     }
